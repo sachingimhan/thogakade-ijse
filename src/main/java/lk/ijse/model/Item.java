@@ -43,4 +43,24 @@ public class Item {
 
         return pstm.executeUpdate() > 0;
     }
+
+    public static ItemDto searchItem(String code) throws SQLException, ClassNotFoundException {
+        Connection connection = DbConnection.getInstance().getConnection();
+        String sql = "SELECT * FROM item WHERE code = ?";
+
+        PreparedStatement pstm = connection.prepareStatement(sql);
+        pstm.setString(1, code);
+
+        ResultSet resultSet = pstm.executeQuery();
+
+        if(resultSet.next()) {
+            return new ItemDto(
+                    resultSet.getString(1),
+                    resultSet.getString(2),
+                    resultSet.getDouble(3),
+                    resultSet.getInt(4)
+            );
+        }
+        return null;
+    }
 }
